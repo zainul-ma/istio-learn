@@ -1,0 +1,23 @@
+apiVersion: config.istio.io/v1alpha2
+kind: EgressRule
+metadata:
+  name: sav-account-egress-txn
+spec:
+  destination:
+    service: 172.20.102.48
+  ports:
+    - port: 32104
+      protocol: HTTP2
+    - port: 30004
+      protocol: HTTP
+---
+apiVersion: config.istio.io/v1alpha2
+kind: EgressRule
+metadata:
+  name: sav-account-egress-mongo
+spec:
+  destination:
+    service: 172.20.102.48
+  ports:
+    - port: 31001
+      protocol: MONGO

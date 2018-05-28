@@ -1,0 +1,19 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: interest-service-route
+spec:
+  destination:
+    name: saving-interest
+  match:
+    request:
+      headers:
+        uri:
+          prefix: "/interest"
+  precedence: 1
+  route:
+  - labels:
+      version: v1
+  - weight: 100
+    destination:
+      name: saving-interest

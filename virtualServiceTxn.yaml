@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sav-txn-grpc
+spec:
+  hosts:
+    - saving-txn
+  gateways:
+    - sav-txn-grpc-gateway
+  http:
+    - match:
+      - uri:
+          prefix: /grpc.reflection.v1alpha.ServerReflection
+      route:
+      - destination:
+          name: saving-txn
+          port:
+            number: 32014
+            # name: grpc

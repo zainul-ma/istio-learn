@@ -1,0 +1,19 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: txn-service-route
+spec:
+  destination:
+    name: saving-txn
+  match:
+    request:
+      headers:
+        uri:
+          prefix: "/txn/.*"
+  precedence: 1
+  route:
+  - labels:
+      version: v1
+  - weight: 100
+    destination:
+      name: saving-txn
