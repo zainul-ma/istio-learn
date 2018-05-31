@@ -1,0 +1,88 @@
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
+
+func main() {
+	for {
+		// for i := 0; i < 5; i++ {
+		// validateIncoming()
+		post()
+		// }
+	}
+}
+
+func post() {
+	body := []byte(`
+		{
+			"rqBody":{
+				"cif_number":143,
+				"product_code":"SA003",
+				"customer_name":"Riendu Haryono for automate",
+				"cif_customer_type":"1010",
+				"account_branch": 1
+			}
+		}
+	`)
+
+	doHtpp("POST", "http://172.20.102.48:31029/sav_account/v1/accounts", body)
+}
+
+func validateIncoming() {
+	body := []byte(`
+		{
+			"rqBody":{
+			  "source_bank_code":"506",
+			  "beneficiary_bank_code":"506",
+			  "source_account_number":"000000000999",
+			  "beneficiary_account_number":"1000000001",
+			  "transaction_amount":5000,
+			  "term":3,
+			  "term_interval":"D",
+			  "maturity_option":"03",
+			  "maturity_transfer_account":"50000000018"
+			}
+		  }
+	`)
+
+	doHtpp("POST", "http://203.154.91.206:30114/fix_txn/v1/incoming/validate/OTHSYS", body)
+}
+
+func doHtpp(method string, url string, body []byte) {
+	client := &http.Client{}
+	req, _ := http.NewRequest(method, url, bytes.NewBuffer(body))
+
+	req.Header.Add("User-Agent", "myClient")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("x-request-id", "18022135F9F7E402094534")
+	req.Header.Add("x-real-ip", "localhost")
+	req.Header.Add("x-caller-service", "client")
+	req.Header.Add("x-caller-domain", "caller-domain")
+	req.Header.Add("x-device", "android")
+	req.Header.Add("datetime", "2017-08-24T13:43:56.41906615Z")
+	req.Header.Add("accept", "application/json")
+
+	response, errResp := client.Do(req)
+
+	if errResp != nil {
+		fmt.Println("==================")
+		fmt.Printf("%s", errResp)
+		fmt.Println("==================")
+		// os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			// os.Exit(1)
+		}
+		fmt.Println("==================")
+		log.Printf("%s\n", string(contents))
+		fmt.Println("==================")
+	}
+}
