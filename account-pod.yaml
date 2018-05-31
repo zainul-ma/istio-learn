@@ -1,25 +1,3 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: saving-account
-  labels:
-    app: saving-account
-spec:
-  ports:
-  - name: http-account
-    port: 8082
-    targetPort: 8082
-    nodePort: 30002
-    # protocol: TCP
-  - name: grpc-account
-    port: 58082
-    targetPort: 58082
-    nodePort: 32102
-  #   protocol: TCP
-  type: LoadBalancer
-  selector:
-    app: saving-account
----
 # this file for deployment account
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -62,7 +40,9 @@ spec:
         - name: CRED_REDIS
           value: "saving-redis:6379"
         - name: RPC_TXN
-          value: "txn@saving-txn:58084"
+          value: "txn@172.20.102.48:31029"
+        - name: HOST_TXN
+          value: "172.20.102.48:31029"
         - name: RPC_INTEREST
           value: "interest@saving-interest:58085"
       restartPolicy: Always

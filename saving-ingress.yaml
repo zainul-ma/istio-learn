@@ -19,6 +19,7 @@ spec:
         backend:
           serviceName: saving-txn
           servicePort: http-txn
-      - backend:
+      - path: /reverse.Restful/.*
+        backend:
           serviceName: saving-txn
           servicePort: grpc-txn

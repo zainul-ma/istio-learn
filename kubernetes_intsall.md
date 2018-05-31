@@ -7,6 +7,9 @@ swapoff -a
 
 add "Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"" to /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
+Removing the $KUBELET_NETWORK_ARGS in /etc/systemd/system/kubelet.service.d/10-kubeadm.conf works for me.
+Thanks @PLoic
+
 systemctl daemon-reload
 
 systemctl restart kubelet
@@ -37,8 +40,6 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 ## Make Secret K8s
 kubectl create secret docker-registry regsecret --docker-server=https://index.docker.io/v1/ --docker-username=tnindo --docker-password=donokasinoindro123 --docker-email=zainul.ma@tnis.com
 
-Removing the $KUBELET_NETWORK_ARGS in /etc/systemd/system/kubelet.service.d/10-kubeadm.conf works for me.
-Thanks @PLoic
 
 ## Istio Command
 kubectl apply -f install/kubernetes/istio.yaml
@@ -51,6 +52,10 @@ kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=ja
 kubectl apply -f <(istioctl kube-inject -f account.yaml  --includeIPRanges=10.108.235.239 --includeHeadlessServices)
 
 echo $(kubectl get po -l istio=ingress -n istio-system -o 'jsonpath={.items[0].status.hostIP}'):$(kubectl get svc istio-ingress -n istio-system -o 'jsonpath={.spec.ports[0].nodePort}')
+
+
+get ip cluster
+kubectl get svc --selector=app=saving-account -o jsonpath='{.items[*].spec.clusterIP}'
 
 kubectl logs -f istio-pilot-65648c94fb-vpnxd -n istio-system discovery
 
@@ -124,3 +129,9 @@ https://istio.io/docs/reference/config/istio.routing.v1alpha1.html#CircuitBreake
 
 
 https://istio.io/docs/concepts/traffic-management/handling-failures.html
+
+
+
+// extra request header to forward the pod
+
+https://istio.io/docs/tasks/telemetry/distributed-tracing.html
