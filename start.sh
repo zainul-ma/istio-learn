@@ -45,6 +45,7 @@ function progress()
 
 progress 0
 kubectl apply -f ingress/saving-ingress.yaml
+kubectl apply -f ingress/ingress-gateway.yaml
 progress 100 "generated saving ingress"
 
 progress 0
