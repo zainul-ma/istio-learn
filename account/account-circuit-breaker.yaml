@@ -1,0 +1,20 @@
+apiVersion: config.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: sav-account-circuit-breaker
+spec:
+  host: saving-account
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 1
+        http2MaxRequests: 1
+        maxRequestsPerConnection: 1
+    outlierDetection:
+      http:
+        consecutiveErrors: 1
+        interval: 1s
+        baseEjectionTime: 3m
+        maxEjectionPercent: 100

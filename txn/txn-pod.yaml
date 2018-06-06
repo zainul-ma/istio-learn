@@ -72,7 +72,7 @@ spec:
           value: "0"
         - name: MQ_ADDRESS_GL
           value: "amqp://glrabbit:glrabbit@glrabbitmq:5672/"
-      restartPolicy: Always
+      # restartPolicy: Always
       volumes:
       - name: txn-logs
         hostPath:

@@ -1,0 +1,38 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: sav-account-egress-txn
+spec:
+  hosts:
+    - 172.20.102.48
+  ports:
+    - number: 32104
+      name: saving-txn-grpc
+      protocol: GRPC
+    - number: 30004
+      name: saving-txn-http
+      protocol: HTTP
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: sav-account-egress-mongo
+spec:
+  hosts:
+    - 172.20.102.48
+  ports:
+    - number: 31001
+      name: saving-mongo
+      protocol: MONGO
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: sav-account-egress-redis
+spec:
+  hosts:
+    - 172.20.102.48
+  ports:
+    - number: 31005
+      name: saving-redis
+      protocol: TCP

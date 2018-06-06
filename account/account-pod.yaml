@@ -40,7 +40,7 @@ spec:
         - name: CRED_REDIS
           value: "saving-redis:6379"
         - name: RPC_TXN
-          value: "txn@172.20.102.48:31029"
+          value: "txn@saving-txn:58084"
         - name: HOST_TXN
           value: "172.20.102.48:31029"
         - name: RPC_INTEREST

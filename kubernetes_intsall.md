@@ -51,7 +51,7 @@ kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=ja
 
 kubectl apply -f <(istioctl kube-inject -f account.yaml  --includeIPRanges=10.108.235.239 --includeHeadlessServices)
 
-echo $(kubectl get po -l istio=ingress -n istio-system -o 'jsonpath={.items[0].status.hostIP}'):$(kubectl get svc istio-ingress -n istio-system -o 'jsonpath={.spec.ports[0].nodePort}')
+echo $(kubectl get po -l istio=ingressgateway -n istio-system -o 'jsonpath={.items[0].status.hostIP}'):$(kubectl get svc istio-ingressgateway -n istio-system -o 'jsonpath={.spec.ports[0].nodePort}')
 
 
 get ip cluster
@@ -135,3 +135,34 @@ https://istio.io/docs/concepts/traffic-management/handling-failures.html
 // extra request header to forward the pod
 
 https://istio.io/docs/tasks/telemetry/distributed-tracing.html
+
+
+kubectl exec -it saving-account-86488c44c7-bmzcv  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
+
+
+kubectl exec -it saving-txn-db58c4f5d-g4jc5  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
+
+
+kubectl exec -it saving-txn-db58c4f5d-g4jc5  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
+
+
+
+kubectl exec -ti saving-txn-db58c4f5d-g4jc5 -- curl localhost:15000/stats | grep outlier_detection
+
+
+kubectl exec -ti saving-account-86488c44c7-bmzcv -- curl localhost:15000/stats | grep pending
+
+
+kubectl exec -it saving-account-86488c44c7-bmzcv  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep istio-ingress | grep pending
+
+
+kubectl exec -it $FORTIO_POD  -c fortio /usr/local/bin/fortio -- load -curl  http://httpbin:8000/get
+
+
+
+
+kubectl exec -it saving-account-85977b46b5-j2k6c  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
+
+
+kubectl exec -it saving-account-66788958f5-8rh67  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep outlier_detection
+
