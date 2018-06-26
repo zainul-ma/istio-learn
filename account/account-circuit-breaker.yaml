@@ -3,11 +3,11 @@ kind: DestinationRule
 metadata:
   name: sav-account-circuit-breaker
 spec:
-  host: saving-account
+  host: saving-account.default.svc.cluster.local
   trafficPolicy:
     connectionPool:
       tcp:
-        maxConnections: 100
+        maxConnections: 1
       http:
         http1MaxPendingRequests: 1
         http2MaxRequests: 1

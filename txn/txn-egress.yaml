@@ -4,7 +4,7 @@ metadata:
   name: sav-txn-egress-pg
 spec:
   hosts:
-    - 172.20.102.48
+    - saving-postgresql.default.svc.cluster.local
   ports:
     - number: 31008
       name: saving-postgresql
@@ -16,7 +16,7 @@ metadata:
   name: sav-txn-egress-mongo
 spec:
   hosts:
-    - 172.20.102.48
+    - saving-mongo.default.svc.cluster.local
   ports:
     - number: 31001
       name: saving-mongo
@@ -28,7 +28,7 @@ metadata:
   name: sav-txn-egress-redis
 spec:
   hosts:
-    - 172.20.102.48
+    - saving-redis.default.svc.cluster.local
   ports:
     - number: 31005
       name: saving-redis

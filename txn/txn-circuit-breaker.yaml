@@ -3,11 +3,11 @@ kind: DestinationRule
 metadata:
   name: sav-txn-circuit-breaker
 spec:
-  host: saving-txn
+  host: saving-txn.default.svc.cluster.local
   trafficPolicy:
     connectionPool:
       tcp:
-        maxConnections: 100
+        maxConnections: 10
       http:
         http1MaxPendingRequests: 1
         http2MaxRequests: 1

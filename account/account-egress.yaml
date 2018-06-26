@@ -4,11 +4,11 @@ metadata:
   name: sav-account-egress-txn
 spec:
   hosts:
-    - 172.20.102.48
+    - saving-txn.default.svc.cluster.local
   ports:
     - number: 32104
       name: saving-txn-grpc
-      protocol: GRPC
+      protocol: HTTP2
     - number: 30004
       name: saving-txn-http
       protocol: HTTP
@@ -19,7 +19,7 @@ metadata:
   name: sav-account-egress-mongo
 spec:
   hosts:
-    - 172.20.102.48
+    - saving-mongo.default.svc.cluster.local
   ports:
     - number: 31001
       name: saving-mongo
@@ -31,7 +31,7 @@ metadata:
   name: sav-account-egress-redis
 spec:
   hosts:
-    - 172.20.102.48
+    - saving-redis.default.svc.cluster.local
   ports:
     - number: 31005
       name: saving-redis

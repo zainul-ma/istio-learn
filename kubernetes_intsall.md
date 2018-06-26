@@ -137,7 +137,7 @@ https://istio.io/docs/concepts/traffic-management/handling-failures.html
 https://istio.io/docs/tasks/telemetry/distributed-tracing.html
 
 
-kubectl exec -it saving-account-86488c44c7-bmzcv  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
+kubectl exec -it saving-account-7dc6df989d-gfnkb  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
 
 
 kubectl exec -it saving-txn-db58c4f5d-g4jc5  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
@@ -158,17 +158,13 @@ kubectl exec -it saving-account-86488c44c7-bmzcv  -c istio-proxy  -- sh -c 'curl
 
 kubectl exec -it $FORTIO_POD  -c fortio /usr/local/bin/fortio -- load -curl  http://httpbin:8000/get
 
-
-
-
 kubectl exec -it saving-account-85977b46b5-j2k6c  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
 
-
-kubectl exec -it saving-account-66788958f5-8rh67  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep outlier_detection
-
-
-
+kubectl exec -it saving-account-7dc6df989d-jks9f  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep outlier_detection
 
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http")].port}')
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
+
+
+kubectl exec -it saving-txn-77965c7c89-x8wds -- curl localhost:15000/stats | grep pending
