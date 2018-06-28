@@ -98,6 +98,27 @@ and to launch the jeager ui use
 kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 
 ```
 
+### isitio cheat
+
+to check the circuit brekaer you can use this command to see is the circuit running or not
+
+```
+kubectl exec -it saving-account-7dc6df989d-gfnkb  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
+```
+
+if the pod has pending status counted for example pending: 10 times it's looks like the circuit work
+for example output like this
+
+```
+cluster.out.httpbin.springistio.svc.cluster.local|http|version=v1.upstream_rq_pending_active: 0
+cluster.out.httpbin.springistio.svc.cluster.local|http|version=v1.upstream_rq_pending_failure_eject: 0
+cluster.out.httpbin.springistio.svc.cluster.local|http|version=v1.upstream_rq_pending_overflow: 12
+cluster.out.httpbin.springistio.svc.cluster.local|http|version=v1.upstream_rq_pending_total: 39
+```
+
+it's mean the rq_pending_total:39 looks like the circuit it's work
+
+
 List of supported links
 
 https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0
@@ -125,20 +146,3 @@ https://istio.io/docs/reference/config/istio.routing.v1alpha1.html#CircuitBreake
 https://istio.io/docs/concepts/traffic-management/handling-failures.html
 
 https://istio.io/docs/tasks/telemetry/distributed-tracing.html
-
-
-kubectl exec -it saving-account-7dc6df989d-gfnkb  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
-
-kubectl exec -it saving-txn-db58c4f5d-g4jc5  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
-
-kubectl exec -ti saving-txn-db58c4f5d-g4jc5 -- curl localhost:15000/stats | grep outlier_detection
-
-kubectl exec -ti saving-account-86488c44c7-bmzcv -- curl localhost:15000/stats | grep pending
-
-kubectl exec -it saving-account-86488c44c7-bmzcv  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep istio-ingress | grep pending
-
-kubectl exec -it saving-account-85977b46b5-j2k6c  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep pending
-
-kubectl exec -it saving-account-7dc6df989d-jks9f  -c istio-proxy  -- sh -c 'curl localhost:15000/stats' | grep outlier_detection
-
-kubectl exec -it saving-txn-77965c7c89-x8wds -- curl localhost:15000/stats | grep pending
