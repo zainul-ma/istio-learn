@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: report
+  labels:
+    run: report
+spec:
+  ports:
+  -  port: 8086
+     targetPort: 8086
+     nodePort: 30006
+     name: app
+  - port: 58086
+    targetPort: 58086
+    nodePort: 32106
+    name: grpc
+  type: LoadBalancer
+  selector:
+    run: report

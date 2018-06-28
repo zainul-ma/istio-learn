@@ -1,0 +1,87 @@
+# this file for deployment txn
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: saving-txn
+  labels:
+    app: saving-txn
+    version: v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: saving-txn
+    spec:
+      containers:
+      - name: txn
+        image: tnindo/txn:v1pocServiceMesh.0.1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8084
+          name: http
+        - containerPort: 58084
+          name: grpc
+        volumeMounts:
+        - mountPath: /go/src/txn/logs
+          name: txn-logs
+        env:
+        - name: GOPATH
+          value: "/go"
+        - name: GOAPP
+          value: "txn"
+        - name: GOENV
+          value: "kube"
+        - name: SMITHBANKCODE
+          value: "009"
+        - name: MQ
+          value: "kube"
+        - name: HTTP
+          value: "kube"
+        - name: RPC
+          value: "kube"
+        - name: CRED_MONGODB
+          value: "mongodb://172.20.102.48:31001"
+        - name: CRED_REDIS
+          value: "172.20.102.48:31005"
+        - name: CRED_PGSQL
+          value: "postgres://postgres:root@172.20.102.48:31008/postgres?sslmode=disable"
+        - name: PATH_BATCH_EARNING
+          value: "storages/batch/earning/"
+        - name: NUM_ROUTINE
+          value: "50"
+        - name: DB_MAXIDLE
+          value: "50"
+        - name: DB_MAXCONN
+          value: "50"
+        - name: DOMAIN_ID
+          value: "02"
+        - name: DOMAIN_ID_FIX
+          value: "05"
+        - name: FIX_TXN_DOMAIN_HOST
+          value: "http://fd-txn:7084"
+        - name: RPC_RULESTXN
+          value: "general_transaction_rule@172.20.102.48:32103"
+        - name: HTTP_TXN
+          value: "http://192.168.103.4:8080"
+        - name: HTTP_SELFSVC
+          value: "http://172.17.0.1:30004"
+        - name: HTTP_OTHER
+          value: "http://127.0.0.1:8084"
+        - name: batch
+          value: "0"
+        - name: MQ_ADDRESS_GL
+          value: "amqp://glrabbit:glrabbit@glrabbitmq:5672/"
+      # restartPolicy: Always
+      volumes:
+      - name: txn-logs
+        hostPath:
+          path: /your-path/data-log/saving_txn/logs
+      imagePullSecrets:
+      - name: regsecret
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+

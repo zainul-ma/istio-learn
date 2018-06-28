@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: saving-postgresql
+spec:
+  selector:
+    db: saving-postgresql
+  type: NodePort
+  ports:
+    - port: 5432
+      name: tcp
+      protocol: TCP
+      targetPort: 5432
+      nodePort: 31008
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: saving-postgresql
+  labels:
+    db: saving-postgresql
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        db: saving-postgresql
+    spec:
+      containers:
+      - name: saving-postgresql
+        image: tnindo/postgresql:v2
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-vol
+      restartPolicy: Always
+      volumes:
+      - name: postgres-vol
+        hostPath:
+          path: /your-path/data-postgres/saving_postgres/
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1

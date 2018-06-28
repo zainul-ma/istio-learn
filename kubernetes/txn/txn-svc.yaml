@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: saving-txn
+  labels:
+    app: saving-txn
+spec:
+  ports:
+  - name: http-txn
+    port: 8084
+    targetPort: 8084
+    nodePort: 30004
+    # protocol: TCP
+  - name: grpc-txn
+    port: 58084
+    targetPort: 58084
+    nodePort: 32104
+    # protocol: TCP
+  type: LoadBalancer
+  selector:
+    app: saving-txn

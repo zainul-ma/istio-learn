@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: saving-mongo
+spec:
+  selector:
+    db: mongo
+  type: NodePort
+  ports:
+    - port: 27017
+      name: tcp
+      protocol: TCP
+      targetPort: 27017
+      nodePort: 31001
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    db: mongo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        db: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:latest
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-vol
+      restartPolicy: Always
+      volumes:
+      - name: mongo-vol
+        hostPath:
+          path: /your-path/data-mongo/saving_vol_mongo
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1

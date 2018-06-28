@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rulestxntest
+  labels:
+    run: rulestxntest
+spec:
+  ports:
+  -  port: 8083
+     targetPort: 8083
+     nodePort: 32003
+  type: LoadBalancer
+  selector:
+    run: rulestxntest

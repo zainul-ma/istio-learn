@@ -1,0 +1,66 @@
+# this file for deployment rulestxn
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rulestxn
+  labels:
+    run: rulestxn
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: rulestxn
+    spec:
+      containers:
+      - name: rulestxn
+        image: tnindo/rulestxn:v1stag.0.13
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /etc/supervisor/conf.d
+          name: rules-vol
+        - mountPath: /go/src/general-transaction-rule/logs
+          name: rules-logs
+        env:
+        - name: GOPATH
+          value: "/go"
+        - name: GOENV
+          value: "kube"
+        - name: GOAPP
+          value: "general-transaction-rule"
+        - name: SMITHBANKCODE
+          value: "009"
+        - name: HTTP
+          value: "kube"
+        - name: RPC
+          value: "kube"
+        - name: OLDCBSURL
+          value: "/incoming/validate/OLDCBS"
+        - name: OTHBANKURL
+          value: "/incoming/validate/OTHBANK"
+        - name: OUTGOINGURL
+          value: "/outgoing/validate/OnlineTransfer"
+        - name: CRED_MONGODB
+          value: "mongodb://172.17.0.1:31001"
+        - name: CRED_MQ
+          value: "amqp://savrabbit:savrabbit@savrabbitmq:5672/"
+        - name: CRED_REDIS
+          value: "172.17.0.1:31005"
+        - name: SMITHEARNINGREDEMPTIONBANKCODE
+          value: "030"
+      restartPolicy: Always
+      volumes:
+      - name: rules-vol
+        hostPath:
+          path: /home/ubuntu/saving_cred/rules
+      - name: rules-logs
+        hostPath:
+          path: /data/saving_rulestxn/logs
+      imagePullSecrets:
+      - name: regsecret
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+

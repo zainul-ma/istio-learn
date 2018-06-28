@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rulestxn
+  labels:
+    run: rulestxn
+spec:
+  ports:
+  -  port: 8083
+     targetPort: 8083
+     nodePort: 30003
+     name: app
+  -  port: 18083
+     targetPort: 18083
+     nodePort: 30103
+     name: socket
+  - port: 58083
+    targetPort: 58083
+    nodePort: 32103
+    name: grpc
+  type: LoadBalancer
+  selector:
+    run: rulestxn

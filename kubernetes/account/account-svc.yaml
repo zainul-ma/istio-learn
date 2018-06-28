@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: saving-account
+  labels:
+    app: saving-account
+spec:
+  ports:
+  - name: http-account
+    port: 8082
+    targetPort: 8082
+    nodePort: 30002
+  - name: grpc-account
+    port: 58082
+    targetPort: 58082
+    nodePort: 32102
+  type: LoadBalancer
+  selector:
+    app: saving-account

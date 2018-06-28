@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: saving-interest
+  labels:
+    app: saving-interest
+spec:
+  ports:
+  - name: http-interest
+    port: 8085
+    targetPort: 8085
+    nodePort: 30005
+  - name: grpc-interest
+    port: 58085
+    targetPort: 58085
+    nodePort: 32105
+  type: LoadBalancer
+  selector:
+    app: saving-interest
+---
+# this file for deployment interest
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: saving-interest
+  labels:
+    app: saving-interest
+    version: v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: saving-interest
+    spec:
+      containers:
+      - name: interest
+        image: tnindo/interest:v1pocServiceMesh.0.1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8085
+        volumeMounts:
+        - mountPath: /go/src/interest/logs
+          name: interest-logs
+        env:
+        - name: GOPATH
+          value: "/go"
+        - name: GOAPP
+          value: "interest"
+        - name: GOENV
+          value: "kube"
+        - name: SMITHBANKID
+          value: "009"
+        - name: MQ
+          value: "kube"
+        - name: HTTP
+          value: "kube"
+        - name: RPC
+          value: "kube"
+        - name: CRED_MONGODB
+          value: "mongodb://172.20.102.48:31001"
+        - name: CRED_MQ
+          value: "amqp://savrabbit:savrabbit@savrabbitmq:5672/"
+        - name: CRED_PGSQL
+          value: "postgres://postgres:root@172.20.102.48:31008/smith_interest?sslmode=disable"
+        - name: DB_MAXIDLE
+          value: "50"
+        - name: DB_MAXCONN
+          value: "50"
+        - name: RPC_TXN
+          value: "txn@172.20.102.48:58084"
+      restartPolicy: Always
+      volumes:
+      - name: interest-logs
+        hostPath:
+          path: /home/zainul/poc-service-mesh/data-log/saving_interest/logs 
+      imagePullSecrets:
+      - name: regsecret
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1

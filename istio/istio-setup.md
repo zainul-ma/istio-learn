@@ -146,3 +146,5 @@ https://istio.io/docs/reference/config/istio.routing.v1alpha1.html#CircuitBreake
 https://istio.io/docs/concepts/traffic-management/handling-failures.html
 
 https://istio.io/docs/tasks/telemetry/distributed-tracing.html
+
+https://github.com/istio/istio.github.io/pull/1450#discussion_r193406320
