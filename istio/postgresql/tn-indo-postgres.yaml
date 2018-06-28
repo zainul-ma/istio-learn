@@ -1,42 +1,42 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: saving-mongo
+  name: saving-postgresql
 spec:
   selector:
-    db: mongo
+    db: saving-postgresql
   type: NodePort
   ports:
-    - port: 27017
+    - port: 5432
       name: tcp
       protocol: TCP
-      targetPort: 27017
-      nodePort: 31001
+      targetPort: 5432
+      nodePort: 31008
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: mongo
+  name: saving-postgresql
   labels:
-    db: mongo
+    db: saving-postgresql
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        db: mongo
+        db: saving-postgresql
     spec:
       containers:
-      - name: mongo
-        image: mongo:latest
+      - name: saving-postgresql
+        image: tnindo/postgresql:v2
         volumeMounts:
-        - mountPath: /data/db
-          name: mongo-vol
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-vol
       restartPolicy: Always
       volumes:
-      - name: mongo-vol
+      - name: postgres-vol
         hostPath:
-          path: /home/zainul/poc-service-mesh/data-mongo/saving_vol_mongo
+          path: /your-path/data-postgres/saving_postgres/
   strategy:
     type: RollingUpdate
     rollingUpdate:

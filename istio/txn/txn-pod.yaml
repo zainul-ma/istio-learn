@@ -76,7 +76,7 @@ spec:
       volumes:
       - name: txn-logs
         hostPath:
-          path: /home/zainul/poc-service-mesh/data-log/saving_txn/logs
+          path: /your-path/data-log/saving_txn/logs
       imagePullSecrets:
       - name: regsecret
   strategy:

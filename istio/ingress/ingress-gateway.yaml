@@ -1,3 +1,12 @@
+# ingress gateway is use for like gateway in one domain
+# for example below is use for saving domain that accept the port 80 and protocol http
+# to receive call from the client
+# the name must start with http and the protocol also one of listed in list below
+# HTTP
+# HTTP2
+# TCP
+# MONGO
+
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:

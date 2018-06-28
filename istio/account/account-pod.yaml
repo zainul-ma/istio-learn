@@ -49,7 +49,7 @@ spec:
       volumes:
       - name: account-logs
         hostPath:
-          path: /home/zainul/poc-service-mesh/data-log/saving_account/logs 
+          path: /yorupath/data-log/saving_account/logs 
       imagePullSecrets:
       - name: regsecret
   strategy:

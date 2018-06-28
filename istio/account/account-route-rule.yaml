@@ -1,0 +1,32 @@
+# Istio provides a simple configuration model to control 
+# how API calls the traffic flow across various services in an application deployment.
+# The configuration model allows an operator to configure service-level 
+# properties such as circuit breakers, timeouts, retries, as well as set up common continuous deployment tasks 
+# such as canary rollouts, A/B testing, staged rollouts with %-based traffic splits, etc.
+# this one of the example that we have.
+# this sample below is make the request configured to 100% request to be go to saving-account v1
+# ```
+# destination:
+#       name: saving-account
+# ```
+
+# those part is make destination name of saving-account
+# and this property 
+# ```
+# weight: 100
+# ```
+
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: account-service-route
+spec:
+  destination:
+    name: saving-account
+  precedence: 1
+  route:
+  - labels:
+      version: v1
+  - weight: 100
+    destination:
+      name: saving-account

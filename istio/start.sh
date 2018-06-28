@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #
 # Description : delay executing script
 #
@@ -41,7 +42,76 @@ function progress()
     CURRENT_PROGRESS=$PARAM_PROGRESS;
 }
 
+progress 0
+kubectl apply -f ingress/saving-ingress.yaml
+kubectl apply -f ingress/ingress-gateway.yaml
+progress 100 "generated saving ingress"
 
 progress 0
-kubectl delete deployment mongo redis saving-account saving-txn saving-postgresql
-progress 100
+kubectl apply -f <(istioctl kube-inject -f redis/redis.yaml)
+progress 100 "started redis"
+
+progress 0
+kubectl apply -f <(istioctl kube-inject -f mongo/mongo.yaml)
+progress 100 "started mongo"
+
+progress 0
+kubectl apply -f <(istioctl kube-inject -f postgresql/tn-indo-postgres.yaml)
+progress 100 "started postgres"
+
+progress 0
+istioctl create -f postgresql/tn-indo-postgres-circuit-breaker.yaml
+istioctl replace -f postgresql/tn-indo-postgres-circuit-breaker.yaml
+progress 100 "setup postgres circuit breaker"
+
+## generated account service
+progress 0
+istioctl create -f account/account-egress.yaml
+istioctl replace -f account/account-egress.yaml
+progress 100 "creating account-egress"
+
+progress 0
+kubectl apply -f <(istioctl kube-inject -f account/account-svc.yaml)
+progress 100 "generated service account"
+
+progress 0
+clusterIPAccount=`kubectl get svc --selector=app=saving-account -o jsonpath='{.items[*].spec.clusterIP}'`
+kubectl apply -f <(istioctl kube-inject -f account/account-pod.yaml)
+progress 100 "started account"
+
+progress 0
+istioctl create -f account/account-circuit-breaker.yaml
+istioctl replace -f account/account-circuit-breaker.yaml
+progress 100 "setup account circuit breaker"
+
+
+## generated txn service
+progress 0
+istioctl create -f txn/txn-egress.yaml
+istioctl replace -f txn/txn-egress.yaml
+progress 100 "creating txn-egress"
+
+progress 0
+kubectl apply -f <(istioctl kube-inject -f txn/txn-svc.yaml)
+progress 100 "generated service txn"
+
+
+progress 0
+clusterIPTxn=`kubectl get svc --selector=app=saving-txn -o jsonpath='{.items[*].spec.clusterIP}'`
+kubectl apply -f <(istioctl kube-inject -f txn/txn-pod.yaml)
+progress 100 "started txn"
+
+
+progress 0
+istioctl create -f txn/txn-circuit-breaker.yaml
+istioctl replace -f txn/txn-circuit-breaker.yaml
+progress 100 "setup txn circuit breaker"
+
+progress 0
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml
+progress 100 "started jeager"
+
+progress 0
+echo "preparing launch   "
+sleep 1
+progress 100 "job well done ... !!!"
