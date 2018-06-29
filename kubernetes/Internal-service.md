@@ -6,10 +6,11 @@ i will tell about start.sh here
 
 first we need storage db and cache db which is redis , mongo and postgres
 when execute start
-it will be creat
-redis instance
-mongo instance
-postgre sql instance
+it will be create
+
+- redis instance
+- mongo instance
+- postgre sql instance
 
 create the db instance belongs to the each service that we need
 for example txn service
@@ -24,8 +25,8 @@ create database smith_interest;
 after this the script will be execute the service instance
 
 for example in this script
-will be insta
-account service
-txn service
+will be install
+- account service
+- txn service
 
 and the service will be start
