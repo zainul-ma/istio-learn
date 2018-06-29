@@ -99,4 +99,51 @@ it will be open n (depend how many service you put in those file) terminal tab a
 
 #### Happy Coding :))
 
-Deployment 
+## CICD
+
+requirement for CI & CD is Jenkins , because we use jenkins. for jenkins just follow the installation from official jenkins , in jenkins we also need docker as the thirdparty like db , mq or cache.
+
+CI and CD in our repo contain 6 step , the step is:
+- preparation
+    - preparation is first step , so that we need is clone the repository , in our script in directory
+    cicd. so actually the scrip it's just run:
+        - create directory in jenkins work space
+            ```mkdir -p /var/lib/jenkins/workspace/SAV_TXN/src/txn```
+        - remove the all directory under the selected service work space (remove for the new one version)
+        - copy all cloned file to the service workspace , in this sample is txn
+        - start the docker
+- linter
+    - linter is static typing, the tools use for checking the our code and make clean and dicipline
+
+- test
+    - the test is the important things in development , this test contain 
+        - unit test
+        - integration test
+        - component test
+    - also the coverage must be at least 70% 
+    - to run the test the environment variable must put in the test.sh
+    - make sure the migration run before the test run
+- build
+    - we change the app.conf part runmode in beego app from ```dev``` to ```prod``` 
+    - at this step is litteraly build the image with docker build command
+    ```
+    docker build -t tnindo/txn:$VERSION_IMG_STAG.$VERSION_MINOR_IMG_STAG.$BUILD_ID -f Dockerfile .
+    ```
+    - if build succes will be go to the next step , and if failed, you can rerun again
+- push
+    - push actually is just push to dockerhub the step is login first and then push
+    - for login jus use the docker login command
+    for example
+    ```
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    ```
+    - for push , push the image that actually has been build
+- deploy 
+    - deploy in here is just change the image in server , the setup already setup in k8s level
+    the script for deploy is looks like this
+    ```
+    kubectl set image deployments/fd-txn fd-txn=tnindo/fix_txn:v1stag.0.${BUILD_NO}
+    ```
+## Deployment 
+follow this link
+https://github.com/zainul-ma/istio-learn/blob/0.8/kubernetes/Internal-service.md

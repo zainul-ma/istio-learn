@@ -20,6 +20,12 @@ and then remove
 $KUBELET_NETWORK_ARGS
 ```
 
+make the firewall is disable
+
+```
+sudo ufw disable
+```
+
 and after this do it command below , to reload daemon and start the kubelet
 
 ```
@@ -84,6 +90,19 @@ kubectl create secret docker-registry regcred --docker-server=<your-registry-ser
 kubectl create secret docker-registry regsecret --docker-server=https://index.docker.io/v1/ --docker-username=tnindo --docker-password=yoursecret --docker-email=zainul.ma@tnis.com
 ```
 
+to make can accessible to external connection you must go to inside the pod
+follow this step:
+- ```kubectl get pod``` => is to get list pod
+- copy the name pod
+- doit this ```kubectl exec -it name-pod-that-you-copy /bin/bash``` => you will be inside to the pod
+- and the do this command ```echo "nameserver 8.8.8.8" | tee /etc/resolv.conf > /dev/null```
+- try with "apt-get update" => it will be can access to external internet
 
 **Tested with kube > 0.9**
+
+
+
+
+
+***if you see this documentation i am not in here again**
 
