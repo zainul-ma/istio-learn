@@ -1,6 +1,0 @@
-- eggres change to serviceEntry
-- includeIPRanges change to edit in istio installation
-
-
-
-GRPC eggress despreceted

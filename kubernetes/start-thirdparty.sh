@@ -43,20 +43,16 @@ function progress()
 }
 
 progress 0
-kubectl apply -f account/account-svc.yaml
-progress 100 "generated service account"
+kubectl apply -f redis/redis.yaml
+progress 100 "started redis"
 
 progress 0
-kubectl apply -f account/account-pod.yaml
-progress 100 "started account"
+kubectl apply -f mongo/mongo.yaml
+progress 100 "started mongo"
 
 progress 0
-kubectl apply -f txn/txn-svc.yaml
-progress 100 "generated service txn"
-
-progress 0
-kubectl apply -f txn/txn-pod.yaml
-progress 100 "started txn"
+kubectl apply -f postgresql/tn-indo-postgres.yaml
+progress 100 "started postgres"
 
 progress 0
 echo "preparing launch   "
